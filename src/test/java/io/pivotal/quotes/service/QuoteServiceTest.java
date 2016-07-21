@@ -91,9 +91,10 @@ public class QuoteServiceTest {
 	
 	@Test
 	public void getNullQuote() throws Exception{
-		thrown.expect(com.netflix.hystrix.exception.HystrixRuntimeException.class);
-		thrown.expectCause(isA(SymbolNotFoundException.class));
+		//thrown.expect(com.netflix.hystrix.exception.HystrixRuntimeException.class);
+		//thrown.expectCause(isA(SymbolNotFoundException.class));
 		Quote quote = service.getQuote(TestConfiguration.NULL_QUOTE_SYMBOL);
+		assertEquals(quote.getStatus(),"FAILED");
 	}
 	
 	/**
