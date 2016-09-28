@@ -4,11 +4,12 @@ resources:
   type: git
   source:
     uri: {{git-uri}}
+    branch: {{git-branch}}
 
 - name: resource-version
   type: semver
   source:
-    branch: version
+    branch: {{git-version-branch}}
     driver: git
     file: version
     initial_version: 0.0.0
@@ -51,7 +52,6 @@ jobs:
       password: {{CF_PASSWORD}}
       ssl: {{CF_SSL}}
       APPNAME: {{APPNAME}}
-
 
 - name: prepSpace
   build_logs_to_retain: 5
