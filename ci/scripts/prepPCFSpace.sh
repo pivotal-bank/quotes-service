@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/bash 
 set -e
 . $APPNAME/ci/scripts/common.sh
 
@@ -48,7 +48,7 @@ checkSCSServSuccess()
     wc=`cf services | grep $1 | grep "create in progress" | wc -l | xargs`
   done
   wc=`cf services | grep $1 | grep succeeded | wc -l | xargs`
-  if [ wc -ne 1 ]
+  if [ $wc -ne 1 ]
   then
     echo_msg "Error creating service: $1"
   fi
