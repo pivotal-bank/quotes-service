@@ -32,8 +32,10 @@ create_single_service()
         #Yet another annoying hack ....
         PCF_PLAN=`cf marketplace -s p-mysql | grep 100mb | cut -d " " -f1 | xargs`
         cf create-service p-mysql $PCF_PLAN $SI
+        ;;
       *)
         cf create-service $line
+        ;;
     esac
     scs_service_created=1
     echo "Created: $line"
