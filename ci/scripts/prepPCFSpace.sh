@@ -59,7 +59,7 @@ create_all_services()
     # Sleep for service registry
     cf service discovery-service | grep Status: | grep "create in progress"
     wc=1
-    while [ wc -eq 1 ]
+    while [ $wc -eq 1 ]
     do
       wc=`cf service discovery-service | grep Status: | grep "create in progress" | wc -l | xargs`
       echo $wc
