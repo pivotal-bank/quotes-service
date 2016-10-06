@@ -53,6 +53,7 @@ checkSCSServSuccess()
   while [ $wc -eq 1 ]
   do
     sleep 4
+    summaryOfServices
     wc=`cf services | grep $1 | grep "create in progress" | wc -l | xargs`
   done
   wc=`cf services | grep $1 | grep succeeded | wc -l | xargs`
@@ -82,7 +83,6 @@ create_all_services()
   then
     ## Very hacky - need to tidy this up ...
     # Sleep for service registry
-    summaryOfServices
     checkSCSServSuccess p-service-registry
     checkSCSServSuccess p-config-server
     checkSCSServSuccess p-circuit-breaker-dashboard
