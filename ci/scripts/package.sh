@@ -8,6 +8,7 @@ main()
   cd $APPNAME
   ./gradlew clean assemble manifestFilter -P buildversion=$VERSION --no-daemon
   cp build/libs/*.jar ../build
+  cp build/manifest.yml ../build/manifest.yml
   ls ../build
 }
 

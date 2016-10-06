@@ -76,7 +76,7 @@ jobs:
 
   - put: deployToPCF
     params:
-      manifest: output/manifest.yml
+      manifest: build/manifest.yml
       current_app_name: {{APPNAME}}
 
   - task: addVersionInfo
