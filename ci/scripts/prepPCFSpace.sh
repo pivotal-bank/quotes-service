@@ -53,6 +53,7 @@ checkSCSServSuccess()
   while [ $wc -eq 1 ]
   do
     sleep 4
+    date
     summaryOfServices
     wc=`cf services | grep $1 | grep "create in progress" | wc -l | xargs`
   done
