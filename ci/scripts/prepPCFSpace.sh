@@ -39,6 +39,21 @@ create_single_service()
   fi
 }
 
+checkSCSServSuccess()
+{
+  wc=1
+  while [ $wc -eq 1 ]
+  do
+    sleep 4
+    wc=`cf services | grep $1 | grep "create in progress" | wc -l | xargs`
+  done
+  wc=`cf services | grep $1 | grep succeeded | wc -l | xargs`
+  if [ wc -ne 1 ]
+  then
+    echo_msg "Error creating service: $1"
+  fi
+}
+
 create_all_services()
 {
   scs_service_created=0
@@ -56,15 +71,12 @@ create_all_services()
 
   if [ $scs_service_created -eq 1 ]
   then
+    ## Very hacky - need to tidy this up ...
     # Sleep for service registry
-    cf service discovery-service | grep Status: | grep "create in progress"
-    wc=1
-    while [ $wc -eq 1 ]
-    do
-      wc=`cf service discovery-service | grep Status: | grep "create in progress" | wc -l | xargs`
-      echo $wc
-    done
-    cf service discovery-service | grep Status:
+    summaryOfServices
+    checkSCSServSuccess p-service-registry
+    checkSCSServSuccess p-config-server
+    checkSCSServSuccess p-circuit-breaker-dashboard
   fi
 }
 
