@@ -73,6 +73,7 @@ create_all_services()
 main()
 {
   cf_login
+  cf target
   summaryOfServices
   echo "Checking if SCS is deployed"
   checkEnvHasSCS
