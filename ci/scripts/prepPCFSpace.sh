@@ -14,6 +14,7 @@ checkEnvHasSCS(){
 create_single_service()
 {
   line="$@"
+  echo $line
   SI=`echo "$line" | cut -d " " -f 3`
   EXISTS=`cf services | grep ${SI} | wc -l | xargs`
   if [ $EXISTS -eq 0 ]
@@ -70,9 +71,10 @@ create_all_services()
 main()
 {
   summaryOfServices
-  echo "hello"
   checkEnvHasSCS
+  echo "SCS deployed"
   create_all_services
+  echo "hello"
   summaryOfServices
 }
 
