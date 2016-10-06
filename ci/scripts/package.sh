@@ -6,8 +6,7 @@ main()
   createVarsBasedOnVersion
   echo_msg "Starting assemble for ${APPNAME} at version: ${VERSION}"
   cd $APPNAME
-  ./gradlew assemble -P buildversion=$VERSION --no-daemon
-  #./gradlew assemble --no-daemon
+  ./gradlew clean assemble manifestFilter -P buildversion=$VERSION --no-daemon
   cp build/libs/*.jar ../build
   ls ../build
 }

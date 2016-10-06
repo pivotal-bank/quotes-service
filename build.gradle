@@ -31,11 +31,19 @@ repositories {
 
 apply plugin: 'java'
 apply plugin: 'jacoco'
-apply from: "$projectDir/gradle/versioning.gradle"
+//apply from: "$projectDir/gradle/versioning.gradle"
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: "io.spring.dependency-management"
 apply plugin: "com.gorylenko.gradle-git-properties"
+
+allprojects { 
+	if (project.hasProperty('buildversion')) { 
+		project.version = project.buildversion 
+	} else { 
+		project.version = '0.5.0'
+	} 
+}
 
 println version
 

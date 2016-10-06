@@ -7,11 +7,11 @@ image_resource:
     repository: busybox
 
 inputs:
-  - name: cities-service
+  - name: quotes-service
   - name: resource-version
 
 outputs:
   - name: output
 
 run:
-  path: "cities-service/ci/scripts/amendManifest.sh"
+  path: "quotes-service/ci/scripts/amendManifest.sh"
