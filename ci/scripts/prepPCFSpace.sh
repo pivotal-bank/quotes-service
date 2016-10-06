@@ -3,6 +3,7 @@ set -e
 . $APPNAME/ci/scripts/common.sh
 
 checkEnvHasSCS(){
+  echo "hello"
   DiscovInstalled=`cf marketplace | grep p-service-registry`
   echo $DiscovInstalled
   if [[ -z $DiscovInstalled ]]
@@ -71,6 +72,7 @@ create_all_services()
 
 main()
 {
+  cf_login
   summaryOfServices
   echo "Checking if SCS is deployed"
   checkEnvHasSCS
