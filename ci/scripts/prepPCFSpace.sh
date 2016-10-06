@@ -3,9 +3,7 @@ set -e
 . $APPNAME/ci/scripts/common.sh
 
 checkEnvHasSCS(){
-  echo "hello"
   DiscovInstalled=`cf marketplace | grep p-service-registry`
-  echo $DiscovInstalled
   if [[ -z $DiscovInstalled ]]
   then
     echo "The targeted PCF environment does not have Service Discovery in the marketplace, installation will now halt."
@@ -75,9 +73,7 @@ main()
   cf_login
   cf target
   summaryOfServices
-  echo "Checking if SCS is deployed"
   checkEnvHasSCS
-  echo "SCS deployed"
   create_all_services
   echo "hello"
   summaryOfServices
