@@ -4,7 +4,7 @@ set -e
 
 checkEnvHasSCS(){
   DiscovInstalled=`cf marketplace | grep p-service-registry`
-  if [[ -z $DiscovInstalled ]]
+  if [ -z "$DiscovInstalled" ]
   then
     echo "The targeted PCF environment does not have Service Discovery in the marketplace, installation will now halt."
     exit 1
