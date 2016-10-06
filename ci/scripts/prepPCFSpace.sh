@@ -4,7 +4,7 @@ set -e
 
 checkEnvHasSCS(){
   DiscovInstalled=`cf marketplace | grep p-service-registry`
-  if [[ -z $DiscovInstalled ]]
+  if [ -z $DiscovInstalled ]
   then
     echo "The targeted PCF environment does not have Service Discovery in the marketplace, installation will now halt."
     exit 1
@@ -24,7 +24,7 @@ create_single_service()
       #Annoying hack because of quotes, single quotes etc ....
       GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${GITHUB_URI}" ${GITHUB_BRANCH}`
       cf create-service $line -c ''$GIT''
-    elif [[ $line == *"p-mysql"* ]]
+    elif [ $line == *"p-mysql"* ]
     then
       #Yet another annoying hack ....
       PCF_PLAN=`cf marketplace -s p-mysql | grep 100mb | cut -d " " -f1 | xargs`
@@ -84,8 +84,8 @@ create_all_services()
 main()
 {
   cf_login
-  summaryOfServices
   checkEnvHasSCS
+  summaryOfServices
   create_all_services
   summaryOfServices
 }
