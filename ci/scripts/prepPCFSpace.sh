@@ -51,6 +51,7 @@ checkSCSServSuccess()
   if [ $wc -ne 1 ]
   then
     echo_msg "Error creating service: $1"
+    exit 1
   fi
 }
 
