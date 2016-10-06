@@ -70,6 +70,7 @@ create_all_services()
 main()
 {
   summaryOfServices
+  echo "hello"
   checkEnvHasSCS
   create_all_services
   summaryOfServices
