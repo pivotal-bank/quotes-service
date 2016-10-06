@@ -2,22 +2,74 @@
 set -e
 . $APPNAME/ci/scripts/common.sh
 
-main()
+checkEnvHasSCS(){
+  DiscovInstalled=`cf marketplace | grep p-service-registry`
+  if [[ -z $DiscovInstalled ]]
+  then
+    echo "The targeted PCF environment does not have Service Discovery in the marketplace, installation will now halt."
+    exit 1
+  fi
+}
+
+create_single_service()
 {
-  cf_login 
-  summaryOfServices
-  EXISTS=`cf services | grep ${SERVICE_NAME} | wc -l | xargs`
+  line="$@"
+  SI=`echo "$line" | cut -d " " -f 3`
+  EXISTS=`cf services | grep ${SI} | wc -l | xargs`
   if [ $EXISTS -eq 0 ]
   then
-    PLAN=`cf marketplace -s p-mysql | grep MB | head -n 1 | cut -d ' ' -f1 | xargs`
-    if [ -z $PLAN ]
+    echo "About to create: $line"
+    if [[ $line == *"p-config-server"*  &&  ! -z "$GITHUB_URI" ]]
     then
-      PLAN=`cf marketplace -s p-mysql | grep MySQL | head -n 1 | cut -d ' ' -f1 | xargs`
+      #Annoying hack because of quotes, single quotes etc ....
+      GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${GITHUB_URI}" ${GITHUB_BRANCH}`
+      cf create-service $line -c ''$GIT''
+    elif [[ $line == *"p-mysql"* ]]
+    then
+      #Yet another annoying hack ....
+      PCF_PLAN=`cf marketplace -s p-mysql | grep 100mb | cut -d " " -f1 | xargs`
+      cf create-service p-mysql $PCF_PLAN $SI
+    else
+      cf create-service $line
     fi
-    cf create-service p-mysql $PLAN ${SERVICE_NAME}
+    scs_service_created=1
+    echo "Created: $line"
+  else
+    echo_msg "${SI} already exists"
   fi
+}
+
+create_all_services()
+{
+  scs_service_created=0
+
+  # Read all the services that need to be created
+  file="$APPNAME/ci/PCFServices.list"
+  while IFS= read -r line 
+  do
+    if [ ! "${line:0:1}" == "#" ]   #Skip comments
+    then
+      create_single_service "$line" 
+    fi
+  done < "$file"
+  echo_msg "Services created, bear in mind Spring Cloud Services need about a minute to fully initialise."
+
+  if [ $scs_service_created -eq 1 ]
+  then
+    # Sleep for service registry
+    max=18
+  for ((i=1; i<=$max; ++i )) ; do
+     echo "Pausing to allow Spring Cloud Services to Initialise.....$i/$max"
+     sleep 5
+    done
+  fi
+}
+
+main()
+{
+  checkEnvHasSCS
+  create_all_services
   summaryOfServices
-  cf logout
 }
 
 trap 'abort $LINENO' 0
