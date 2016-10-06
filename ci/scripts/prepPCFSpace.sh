@@ -21,6 +21,7 @@ create_single_service()
     echo "About to create: $line"
     case "$line" in
       *p-config-server*)
+        echo ${cs-uri} ${cs-branch}
         if [ ! -z "$cs-uri" ]
         then
           echo ${cs-uri} ${cs-branch}
