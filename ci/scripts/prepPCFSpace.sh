@@ -21,9 +21,12 @@ create_single_service()
     echo "About to create: $line"
     if [ $line == *"p-config-server"*  &&  ! -z "$GITHUB_URI" ]
     then
-      #Annoying hack because of quotes, single quotes etc ....
-      GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${GITHUB_URI}" ${GITHUB_BRANCH}`
-      cf create-service $line -c ''$GIT''
+      if [ ! -z "$GITHUB_URI" ]
+      then
+        #Annoying hack because of quotes, single quotes etc ....
+        GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${GITHUB_URI}" ${GITHUB_BRANCH}`
+        cf create-service $line -c ''$GIT''
+      fi
     elif [ $line == *"p-mysql"* ]
     then
       #Yet another annoying hack ....
