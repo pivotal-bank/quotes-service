@@ -69,6 +69,7 @@ create_all_services()
 
 main()
 {
+  summaryOfServices
   checkEnvHasSCS
   create_all_services
   summaryOfServices
@@ -79,4 +80,4 @@ SECONDS=0
 SCRIPTNAME=`basename "$0"`
 main
 printf "\nExecuted $SCRIPTNAME in $SECONDS seconds.\n"
-trap : 0
+exit 0
