@@ -59,11 +59,11 @@ create_all_services()
   if [ $scs_service_created -eq 1 ]
   then
     # Sleep for service registry
-    max=18
     wc=1
     while [ wc == 1]
     do
-      wc=`cf service discovery-service | grep Status: | grep "create in progress" | wc -l `
+      wc=`cf service discovery-service | grep Status: | grep "create in progress" | wc -l | xargs`
+      echo $wc
     done
     cf service discovery-service | grep Status:
   fi
@@ -72,6 +72,7 @@ create_all_services()
 main()
 {
   summaryOfServices
+  echo "Checking if SCS is deployed"
   checkEnvHasSCS
   echo "SCS deployed"
   create_all_services
