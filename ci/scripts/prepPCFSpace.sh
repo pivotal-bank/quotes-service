@@ -21,11 +21,13 @@ create_single_service()
     echo "About to create: $line"
     case "$line" in
       *p-config-server*)
-        if [ ! -z "$GITHUB_URI" ]
+        if [ ! -z "$git-cs-uri" ]
         then
           #Annoying hack because of quotes, single quotes etc ....
-          GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${GITHUB_URI}" ${GITHUB_BRANCH}`
+          GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${git-cs-uri}" ${git-cs-branch}`
           cf create-service $line -c ''$GIT''
+        else
+          cf create-service $line
         fi
         ;;
       *p-mysql*)
