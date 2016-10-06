@@ -71,8 +71,8 @@ jobs:
       password: {{CF_PASSWORD}}
       ssl: {{CF_SSL}}
       APPNAME: {{APPNAME}}
-      git-cs-uri: {{git-cs-uri}}
-      git-cs-branch: {{git-cs-branch}}
+      cs_uri: {{cs_uri}}
+      cs-branch: {{cs-branch}}
 
 - name: packageNPush
   build_logs_to_retain: 5

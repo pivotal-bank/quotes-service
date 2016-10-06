@@ -22,11 +22,11 @@ create_single_service()
     case "$line" in
       *p-config-server*)
         echo ${cs-uri} ${cs-branch}
-        if [ ! -z "$cs-uri" ]
+        if [ ! -z "$cs_uri" ]
         then
-          echo ${cs-uri} ${cs-branch}
+          echo ${cs_uri} ${cs-branch}
           #Annoying hack because of quotes, single quotes etc ....
-          GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${cs-uri}" ${cs-branch}`
+          GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${cs_uri}" ${cs-branch}`
           cf create-service $line -c ''$GIT''
         else
           cf create-service $line
