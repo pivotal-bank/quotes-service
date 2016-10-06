@@ -4,7 +4,7 @@ set -e
 
 checkEnvHasSCS(){
   DiscovInstalled=`cf marketplace | grep p-service-registry`
-  if [ -z $DiscovInstalled ]
+  if [[ -z $DiscovInstalled ]]
   then
     echo "The targeted PCF environment does not have Service Discovery in the marketplace, installation will now halt."
     exit 1
@@ -19,22 +19,22 @@ create_single_service()
   if [ $EXISTS -eq 0 ]
   then
     echo "About to create: $line"
-    if [ $line == *"p-config-server"*  &&  ! -z "$GITHUB_URI" ]
-    then
-      if [ ! -z "$GITHUB_URI" ]
-      then
-        #Annoying hack because of quotes, single quotes etc ....
-        GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${GITHUB_URI}" ${GITHUB_BRANCH}`
-        cf create-service $line -c ''$GIT''
-      fi
-    elif [ $line == *"p-mysql"* ]
-    then
-      #Yet another annoying hack ....
-      PCF_PLAN=`cf marketplace -s p-mysql | grep 100mb | cut -d " " -f1 | xargs`
-      cf create-service p-mysql $PCF_PLAN $SI
-    else
-      cf create-service $line
-    fi
+    case "$line" in
+      *p-config-server*)
+        if [ ! -z "$GITHUB_URI" ]
+        then
+          #Annoying hack because of quotes, single quotes etc ....
+          GIT=`printf '{"git":{"uri":"%s","label":"%s"}}\n' "${GITHUB_URI}" ${GITHUB_BRANCH}`
+          cf create-service $line -c ''$GIT''
+        fi
+        ;;
+      *p-mysql*)
+        #Yet another annoying hack ....
+        PCF_PLAN=`cf marketplace -s p-mysql | grep 100mb | cut -d " " -f1 | xargs`
+        cf create-service p-mysql $PCF_PLAN $SI
+      *)
+        cf create-service $line
+    esac
     scs_service_created=1
     echo "Created: $line"
   else
