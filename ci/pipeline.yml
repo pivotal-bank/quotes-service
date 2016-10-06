@@ -74,12 +74,6 @@ jobs:
   - put: resource-version
     params: {file: resource-version/number}
 
-  - task: amendManifest
-    file: quotes-service/ci/tasks/amendManifest.yml
-    params:
-      APPNAME: {{APPNAME}}
-      username: {{CF_USERNAME}}
-
   - put: deployToPCF
     params:
       manifest: build/manifest.yml
