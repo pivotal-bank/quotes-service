@@ -14,7 +14,6 @@ checkEnvHasSCS(){
 create_single_service()
 {
   line="$@"
-  echo $line
   SI=`echo "$line" | cut -d " " -f 3`
   EXISTS=`cf services | grep ${SI} | wc -l | xargs`
   if [ $EXISTS -eq 0 ]
@@ -60,7 +59,7 @@ create_all_services()
     # Sleep for service registry
     cf service discovery-service | grep Status: | grep "create in progress"
     wc=1
-    while [ wc == 1]
+    while [ wc -eq 1 ]
     do
       wc=`cf service discovery-service | grep Status: | grep "create in progress" | wc -l | xargs`
       echo $wc
@@ -72,11 +71,9 @@ create_all_services()
 main()
 {
   cf_login
-  cf target
   summaryOfServices
   checkEnvHasSCS
   create_all_services
-  echo "hello"
   summaryOfServices
 }
 
