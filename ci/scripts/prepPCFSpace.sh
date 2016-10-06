@@ -58,6 +58,7 @@ create_all_services()
   if [ $scs_service_created -eq 1 ]
   then
     # Sleep for service registry
+    cf service discovery-service | grep Status: | grep "create in progress"
     wc=1
     while [ wc == 1]
     do
