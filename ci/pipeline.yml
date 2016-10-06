@@ -72,7 +72,7 @@ jobs:
       ssl: {{CF_SSL}}
       APPNAME: {{APPNAME}}
       cs_uri: {{cs_uri}}
-      cs_branch: {{cs-branch}}
+      cs_branch: {{cs_branch}}
 
 - name: packageNPush
   build_logs_to_retain: 5
