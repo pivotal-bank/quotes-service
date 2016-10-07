@@ -3,7 +3,6 @@
 
 main()
 {
-  createVarsBasedOnVersion
   echo_msg "Starting push for ${APPNAME} at version: ${VERSION}"
   cd build
   ls -al
