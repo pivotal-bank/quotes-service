@@ -33,6 +33,7 @@ main()
   cf_login
   checkEnvHasSCS
   create_single_service p-circuit-breaker-dashboard standard circuit-breaker-dashboard
+  cf service circuit-breaker-dashboard
   checkSCSServSuccess p-circuit-breaker-dashboard
 }
 
