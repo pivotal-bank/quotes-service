@@ -3,9 +3,11 @@
 
 main()
 {
+  createVarsBasedOnVersion
   echo_msg "Starting push for ${APPNAME} at version: ${VERSION}"
   cd build
   ls -al
+  cf_login
   cf push --no-start
   cf set-env ${APPNAME} CF_TARGET ${CF_API}
   cf push
