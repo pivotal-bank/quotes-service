@@ -9,7 +9,7 @@ main()
   ls -al
   cf_login
   cf push --no-start
-  cf set-env ${APPNAME} CF_TARGET ${CF_API}
+  cf set-env ${APPNAME} CF_TARGET ${api}
   cf push
   if [ $? -eq 0 ]
   then
