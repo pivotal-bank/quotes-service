@@ -53,8 +53,8 @@ checkSCSServSuccess()
   while [ $wc -eq 1 ]
   do
     sleep 4
-    date
     summaryOfServices
+    date
     wc=`cf services | grep $1 | grep "create in progress" | wc -l | xargs`
   done
   wc=`cf services | grep $1 | grep succeeded | wc -l | xargs`
@@ -104,4 +104,4 @@ SECONDS=0
 SCRIPTNAME=`basename "$0"`
 main
 printf "\nExecuted $SCRIPTNAME in $SECONDS seconds.\n"
-exit 0
+trap : 0
