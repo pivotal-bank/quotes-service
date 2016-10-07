@@ -34,7 +34,7 @@ main()
   checkEnvHasSCS
   create_single_service p-service-registry standard discovery-service
   checkSCSServSuccess discovery-service
-  summaryOfServices
+  cf service discovery-service
 }
 
 trap 'abort $LINENO' 0
