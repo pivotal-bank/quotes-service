@@ -7,7 +7,7 @@ image_resource:
     repository: governmentpaas/cf-cli
 
 inputs:
-  - name: cities-service
+  - name: quotes-service
 
 run:
-  path: "cities-service/ci/scripts/testAppOnPCF.sh"
+  path: "quotes-service/ci/scripts/testAppOnPCF.sh"

@@ -9,8 +9,8 @@ main()
   ./gradlew clean assemble manifestFilter -P buildversion=$VERSION --no-daemon
   cp build/libs/*.jar ../build
   cat build/manifest.yml | sed "s/libs\///g" > ../build/manifest.yml
+  ls -al ../build
   cat ../build/manifest.yml
-  ls ../build
 }
 
 trap 'abort $LINENO' 0
