@@ -92,11 +92,6 @@ jobs:
     params:
       APPNAME: {{APPNAME}}
 
-  - put: resource-version
-    params: {file: resource-version/number}
-
-  - get: resource-version
-
   - task: deploySCSApps
     file: quotes-service/ci/tasks/deploySCSApps.yml
     params:
@@ -118,6 +113,9 @@ jobs:
       password: {{CF_PASSWORD}}
       ssl: {{CF_SSL}}
       APPNAME: {{APPNAME}}
+
+  - put: resource-version
+    params: {file: resource-version/number}
 
 - name: testOnPCF
   build_logs_to_retain: 5
