@@ -95,10 +95,16 @@ jobs:
   - put: resource-version
     params: {file: resource-version/number}
 
-  - put: deployToPCF
+  - task: deploySCSApps
+    file: quotes-service/ci/tasks/deploySCSApps.yml
     params:
-      manifest: build/manifest.yml
-      current_app_name: {{APPNAME}}
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}
 
   - task: addVersionInfo
     file: quotes-service/ci/tasks/addVersionInfo.yml

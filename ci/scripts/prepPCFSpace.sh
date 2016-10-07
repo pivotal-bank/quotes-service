@@ -18,6 +18,7 @@ create_single_service()
   EXISTS=`cf services | grep ${SI} | wc -l | xargs`
   if [ $EXISTS -eq 0 ]
   then
+    echo ""
     echo "About to create: $line"
     case "$line" in
       *p-config-server*)
@@ -52,7 +53,7 @@ checkSCSServSuccess()
   wc=1
   while [ $wc -eq 1 ]
   do
-    sleep 4
+    sleep 7.5
     summaryOfServices
     date
     wc=`cf services | grep $1 | grep "create in progress" | wc -l | xargs`
