@@ -28,30 +28,12 @@ create_single_service()
   fi
 }
 
-checkSCSServSuccess()
-{
-  wc=1
-  while [ $wc -eq 1 ]
-  do
-    sleep 4
-    summaryOfServices
-    date
-    wc=`cf services | grep $1 | grep "create in progress" | wc -l | xargs`
-  done
-  wc=`cf services | grep $1 | grep succeeded | wc -l | xargs`
-  if [ $wc -ne 1 ]
-  then
-    echo_msg "Error creating service: $1"
-    exit 1
-  fi
-}
-
 main()
 {
   cf_login
   checkEnvHasSCS
   create_single_service p-service-registry standard discovery-service
-  checkSCSServSuccess p-service-registry
+  checkSCSServSuccess discovery-service
   summaryOfServices
 }
 

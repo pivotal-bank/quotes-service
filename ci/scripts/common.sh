@@ -77,3 +77,21 @@ createVarsBasedOnVersion()
   echo $VERSION
 }
 
+checkSCSServSuccess()
+{
+  wc=1
+  while [ $wc -eq 1 ]
+  do
+    sleep 4
+    summaryOfServices
+    date
+    wc=`cf service $1 | grep "Status: " | grep "create in progress" | wc -l | xargs`
+  done
+  wc=`cf service $1 | grep "Status: " | grep succeeded | wc -l | xargs`
+  if [ $wc -ne 1 ]
+  then
+    echo_msg "Error creating service: $1"
+    exit 1
+  fi
+}
+

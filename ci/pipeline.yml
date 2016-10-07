@@ -63,7 +63,7 @@ jobs:
     passed:
       - createSpace
     trigger: true
-  - task: prepSpace
+  - task: createServiceRegistry
     file: quotes-service/ci/tasks/createServiceRegistry.yml
     params:
       api: {{CF_API}}
