@@ -76,6 +76,26 @@ jobs:
       cs_uri: {{cs_uri}}
       cs_branch: {{cs_branch}}
 
+- name: createCircuitBreaker
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    passed:
+      - createSpace
+    trigger: true
+  - task: createCircuitBreaker
+    file: quotes-service/ci/tasks/createCircuitBreaker.yml
+    params:
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}
+      cs_uri: {{cs_uri}}
+      cs_branch: {{cs_branch}}
+
 - name: prepSpace
   build_logs_to_retain: 5
   plan:
@@ -103,6 +123,7 @@ jobs:
     passed:
       - prepSpace
       - createServiceRegistry
+      - createCircuitBreaker
     trigger: true
 
   - get: resource-version
