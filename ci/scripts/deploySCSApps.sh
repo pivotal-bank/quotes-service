@@ -12,6 +12,7 @@ main()
   cf_login
   cf push --no-start
   cf set-env ${cf_appname} CF_TARGET ${api}
+  cf set-env ${cf_appname} VERSION ${VERSION}
   cf push
   if [ $? -eq 0 ]
   then
