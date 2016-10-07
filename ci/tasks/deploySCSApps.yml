@@ -8,6 +8,8 @@ image_resource:
 
 inputs:
   - name: quotes-service
+  - name: resource-version
+  - name: build
 
 run:
   path: "quotes-service/ci/scripts/deploySCSApps.sh"
