@@ -34,7 +34,7 @@ main()
   checkEnvHasSCS
   create_single_service p-circuit-breaker-dashboard standard circuit-breaker-dashboard
   cf service circuit-breaker-dashboard
-  checkSCSServSuccess p-circuit-breaker-dashboard
+  checkSCSServSuccess circuit-breaker-dashboard
 }
 
 trap 'abort $LINENO' 0

@@ -42,7 +42,7 @@ main()
   checkEnvHasSCS
   create_single_service p-config-server standard config-server
   cf service config-server
-  checkSCSServSuccess p-config-server
+  checkSCSServSuccess config-server
 }
 
 trap 'abort $LINENO' 0
