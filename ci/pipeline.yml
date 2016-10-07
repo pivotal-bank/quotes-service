@@ -131,6 +131,7 @@ jobs:
   - task: package
     file: quotes-service/ci/tasks/package.yml
     params:
+      bump: patch
       APPNAME: {{APPNAME}}
 
   - put: resource-version
