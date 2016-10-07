@@ -37,23 +37,6 @@ jobs:
   - task: test
     file: quotes-service/ci/tasks/test.yml
 
-- name: packageSrc
-  build_logs_to_retain: 5
-  plan:
-  - get: quotes-service
-    passed:
-      - testSrc
-    trigger: true
-
-  - get: resource-version
-    params:
-      bump: patch
-
-  - task: package
-    file: quotes-service/ci/tasks/package.yml
-    params:
-      APPNAME: {{APPNAME}}
-
 - name: createSpace
   build_logs_to_retain: 5
   plan:
@@ -102,6 +85,11 @@ jobs:
     trigger: true
 
   - get: resource-version
+
+  - task: package
+    file: quotes-service/ci/tasks/package.yml
+    params:
+      APPNAME: {{APPNAME}}
 
   - put: resource-version
     params: {file: resource-version/number}
