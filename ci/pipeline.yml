@@ -95,6 +95,8 @@ jobs:
   - put: resource-version
     params: {file: resource-version/number}
 
+  - get: resource-version
+
   - task: deploySCSApps
     file: quotes-service/ci/tasks/deploySCSApps.yml
     params:
