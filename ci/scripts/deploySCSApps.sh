@@ -7,9 +7,11 @@ main()
   echo_msg "Starting push for ${APPNAME} at version: ${VERSION}"
   cd build
   ls -al
+
+  cf_appname=`cat manifest.yml | grep " name:" | cut -d ":" -f 2 | xargs`
   cf_login
   cf push --no-start
-  cf set-env ${APPNAME} CF_TARGET ${api}
+  cf set-env ${cf_appname} CF_TARGET ${api}
   cf push
   if [ $? -eq 0 ]
   then
