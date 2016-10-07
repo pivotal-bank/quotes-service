@@ -10,4 +10,4 @@ inputs:
   - name: quotes-service
 
 run:
-  path: "quotes-service/ci/scripts/createServiceRegistry.sh
+  path: "quotes-service/ci/scripts/createServiceRegistry.sh"
