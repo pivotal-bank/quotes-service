@@ -30,7 +30,7 @@ public class TestConfiguration {
 	public static final String COMPANY_EXCHANGE = "NASDAQ";
 	public static final String NULL_QUOTE_SYMBOL = "LALALALA";
 	
-	public static final String QUOTE_SYMBOLS = "EMC,IBM";
+	public static final String QUOTE_SYMBOLS = "IBM,MSFT";
 	/*
 	 * {"Status":"SUCCESS","Name":"EMC Corp","Symbol":"EMC","LastPrice":26.135,
 	 * "Change":0.00500000000000256,"ChangePercent":0.0191350937619692,

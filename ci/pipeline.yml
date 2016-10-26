@@ -1,0 +1,168 @@
+---
+resources:
+- name: quotes-service
+  type: git
+  check_every: 5s
+  source:
+    uri: {{git-uri}}
+    branch: {{git-branch}}
+
+- name: resource-version
+  type: semver
+  source:
+    branch: {{git-version-branch}}
+    driver: git
+    file: version
+    initial_version: 0.0.0
+    uri: {{GIT-SSH-URI}}
+    private_key: {{GIT_KEY}}
+    git_user: {{GIT_USER}}
+
+- name: deployToPCF
+  type: cf
+  source:
+    api: {{CF_API}}
+    username: {{CF_USERNAME}}
+    password: {{CF_PASSWORD}}
+    organization: {{CF_ORG}}
+    space: {{CF_SPACE}}
+    skip_cert_check: true
+
+jobs:
+- name: testSrc
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    trigger: true
+  - task: test
+    file: quotes-service/ci/tasks/test.yml
+
+- name: createSpace
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    passed:
+      - testSrc
+    trigger: true
+  - task: createPCFSpace
+    file: quotes-service/ci/tasks/createPCFSpace.yml
+    params:
+      CREATE_FRESH_SPACE: {{CREATE_FRESH_SPACE}}
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}
+
+- name: createServiceRegistry
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    passed:
+      - createSpace
+    trigger: true
+  - task: createServiceRegistry
+    file: quotes-service/ci/tasks/createServiceRegistry.yml
+    params:
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}
+      cs_uri: {{cs_uri}}
+      cs_branch: {{cs_branch}}
+
+- name: createCircuitBreaker
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    passed:
+      - createSpace
+    trigger: true
+  - task: createCircuitBreaker
+    file: quotes-service/ci/tasks/createCircuitBreaker.yml
+    params:
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}
+      cs_uri: {{cs_uri}}
+      cs_branch: {{cs_branch}}
+
+- name: createConfigServer
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    passed:
+      - createSpace
+    trigger: true
+  - task: createConfigServer
+    file: quotes-service/ci/tasks/createConfigServer.yml
+    params:
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}
+      cs_uri: {{cs_uri}}
+      cs_branch: {{cs_branch}}
+
+- name: packageNPush
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    passed:
+      - createServiceRegistry
+      - createCircuitBreaker
+      - createConfigServer
+    trigger: true
+
+  - get: resource-version
+    params:
+      bump: patch
+
+  - task: package
+    file: quotes-service/ci/tasks/package.yml
+    params:
+      APPNAME: {{APPNAME}}
+
+  - put: resource-version
+    params: {file: resource-version/number}
+
+  - task: deploySCSApps
+    file: quotes-service/ci/tasks/deploySCSApps.yml
+    params:
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}
+
+- name: testOnPCF
+  build_logs_to_retain: 5
+  plan:
+  - get: quotes-service
+    passed:
+      - packageNPush
+    trigger: true
+  - task: test
+    file: quotes-service/ci/tasks/testOnPCF.yml
+    params:
+      api: {{CF_API}}
+      organization: {{CF_ORG}}
+      space: {{CF_SPACE}}
+      username: {{CF_USERNAME}}
+      password: {{CF_PASSWORD}}
+      ssl: {{CF_SSL}}
+      APPNAME: {{APPNAME}}

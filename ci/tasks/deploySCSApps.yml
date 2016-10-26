@@ -1,0 +1,15 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/cf-cli
+
+inputs:
+  - name: quotes-service
+  - name: resource-version
+  - name: build
+
+run:
+  path: "quotes-service/ci/scripts/deploySCSApps.sh"

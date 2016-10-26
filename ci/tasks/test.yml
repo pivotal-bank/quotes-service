@@ -1,0 +1,18 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: java
+
+inputs:
+  - name: quotes-service
+
+run:
+  path: "quotes-service/gradlew"
+  args: ["--build-file", "quotes-service/build.gradle", "test"]
+
+params:
+  TERM: -dumb
+  GRADLE_OPTS: -Dorg.gradle.native=false
