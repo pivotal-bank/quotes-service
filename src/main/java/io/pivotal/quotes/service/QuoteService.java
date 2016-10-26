@@ -47,7 +47,7 @@ public class QuoteService {
 	// "select * from yahoo.finance.quotes where symbol in ";
 
 	@Value("${pivotal.quotes.yahoo_env}")
-	protected String ENV = "http://datatables.org/alltables.env";
+	protected String ENV = "http://datatables.org/alltableswithkeys.env";
 
 	public static final String FMT = "json";
 
