@@ -40,19 +40,16 @@ public class QuoteService {
 	protected String company_url;
 
 	@Value("${pivotal.quotes.yahoo_rest_query}")
-	protected String yahoo_url = "https://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in ('{symbol}')&format={fmt}&env={env}";
-
-	// @Value("${pivotal.quotes.yahoo_query}")
-	// protected String QID =
-	// "select * from yahoo.finance.quotes where symbol in ";
+	protected String yahoo_url = "https://query.yahooapis.com/v1/public/yql?q=use \"{env}\" as quotes; select * from quotes where symbol in ('{symbol}')&format={fmt}";
 
 	@Value("${pivotal.quotes.yahoo_env}")
-	protected String ENV = "http://datatables.org/alltables.env";
+	protected String ENV = "https://raw.githubusercontent.com/yql/yql-tables/master/yahoo/finance/yahoo.finance.quotes.xml";
 
 	public static final String FMT = "json";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(QuoteService.class);
+
 
 	/*
 	 * cannot autowire as don't want ribbon here.
@@ -128,8 +125,9 @@ public class QuoteService {
 	public List<Quote> getQuotes(String symbols) {
 		logger.debug("retrieving multiple quotes for: "
 				+ symbols);
+
 		YahooQuoteResponse response = restTemplate.getForObject(yahoo_url,
-				YahooQuoteResponse.class, symbols, FMT, ENV);
+				YahooQuoteResponse.class, ENV, symbols, FMT);
 		logger.debug("Got response: " + response);
 		List<Quote> quotes = response
 				.getResults()
