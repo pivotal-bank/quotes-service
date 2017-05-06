@@ -125,7 +125,10 @@ public class QuoteService {
 	public List<Quote> getQuotes(String symbols) {
 		logger.debug("retrieving multiple quotes for: "
 				+ symbols);
-
+		logger.debug("yahoo URL: "
+				+ yahoo_url);
+		logger.debug("env URL: "
+				+ ENV);
 		YahooQuoteResponse response = restTemplate.getForObject(yahoo_url,
 				YahooQuoteResponse.class, ENV, symbols, FMT);
 		logger.debug("Got response: " + response);
