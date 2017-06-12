@@ -1,7 +1,7 @@
 buildscript {
 	ext {
 		springBootVersion = '1.4.6.RELEASE'
-		springCloudStarterParentTrain = 'Camden.SR6'
+		springCloudStarterParentTrain = 'Dalston.SR1'
 		scsVersion = '1.4.1.RELEASE'
 		junitVersion = '4.12'
 	}
@@ -96,7 +96,7 @@ dependencies {
 		compile "org.springframework.cloud:spring-cloud-starter-sleuth"
 		//compile "org.springframework.cloud:spring-cloud-starter-zipkin"
 		compile "org.springframework.cloud:spring-cloud-sleuth-zipkin-stream"
-		compile "org.springframework.cloud:spring-cloud-stream-binder-rabbit"
+		compile "org.springframework.cloud:spring-cloud-starter-stream-rabbit"
 
 
 		compile "io.pivotal.spring.cloud:spring-cloud-services-starter-config-client"
