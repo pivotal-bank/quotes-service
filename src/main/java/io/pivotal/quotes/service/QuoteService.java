@@ -8,11 +8,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.pivotal.quotes.domain.CompanyInfo;
-import io.pivotal.quotes.domain.CompanyInfoMapper;
 import io.pivotal.quotes.domain.Quote;
 import io.pivotal.quotes.domain.YahooQuoteResponse;
 import io.pivotal.quotes.domain.QuoteMapper;
-import io.pivotal.quotes.domain.XigniteDelayedQuote;
 import io.pivotal.quotes.exception.SymbolNotFoundException;
 
 import org.slf4j.Logger;
@@ -42,19 +40,16 @@ public class QuoteService {
 	protected String company_url;
 
 	@Value("${pivotal.quotes.yahoo_rest_query}")
-	protected String yahoo_url = "https://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in ('{symbol}')&format={fmt}&env={env}";
-
-	// @Value("${pivotal.quotes.yahoo_query}")
-	// protected String QID =
-	// "select * from yahoo.finance.quotes where symbol in ";
+	protected String yahoo_url = "https://query.yahooapis.com/v1/public/yql?q=use \"{env}\" as quotes; select * from quotes where symbol in ('{symbol}')&format={fmt}";
 
 	@Value("${pivotal.quotes.yahoo_env}")
-	protected String ENV = "http://datatables.org/alltables.env";
+	protected String ENV = "https://raw.githubusercontent.com/yql/yql-tables/master/yahoo/finance/yahoo.finance.quotes.xml";
 
 	public static final String FMT = "json";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(QuoteService.class);
+
 
 	/*
 	 * cannot autowire as don't want ribbon here.
@@ -69,7 +64,7 @@ public class QuoteService {
 	 * @return The quote object or null if not found.
 	 * @throws SymbolNotFoundException
 	 */
-	@HystrixCommand(fallbackMethod = "getXigniteQuote")
+	@HystrixCommand(fallbackMethod = "getQuoteFallback")
 	public Quote getQuote(String symbol) throws SymbolNotFoundException {
 		logger.debug("QuoteService.getQuote: retrieving quote for: " + symbol);
 		Map<String, String> params = new HashMap<String, String>();
@@ -84,44 +79,15 @@ public class QuoteService {
 		return quote;
 	}
 
-	@HystrixCommand(fallbackMethod = "getQuoteFallback")
-	public Quote getXigniteQuote(String symbol) throws SymbolNotFoundException {
-		logger.debug("QuoteService2.getQuote: retrieving quote for: " + symbol);
-
-		return QuoteMapper.INSTANCE
-				.mapFromXigniteQuote(callXigniteQuote(symbol));
-	}
-
-	private XigniteDelayedQuote callXigniteQuote(String symbol)
-			throws SymbolNotFoundException {
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("symbol", symbol);
-
-		XigniteDelayedQuote quote = null;
-		try {
-			quote = restTemplate.getForObject(quote_url2,
-					XigniteDelayedQuote.class, params);
-			logger.debug("QuoteService2.getQuote: retrieved quote: " + quote);
-		} catch (Exception e) {
-			logger.info("Exception: ", e);
-			throw new IllegalStateException(
-					"An Exception occurred getting stock quote for: " + symbol,
-					e);
-		}
-
-		if (quote.getSecurity().getSymbol() == null) {
-			throw new SymbolNotFoundException("Symbol not found: " + symbol);
-		}
-
-		return quote;
-	}
-
 	@SuppressWarnings("unused")
 	private Quote getQuoteFallback(String symbol)
 			throws SymbolNotFoundException {
 		logger.debug("QuoteService.getQuoteFallback: circuit opened for symbol: "
 				+ symbol);
-		throw new RuntimeException("Quote service unavailable.");
+		Quote quote = new Quote();
+		quote.setSymbol(symbol);
+		quote.setStatus("FAILED");
+		return quote;
 	}
 
 	/**
@@ -133,7 +99,7 @@ public class QuoteService {
 	 *            The search parameter for company name or symbol.
 	 * @return The list of company information.
 	 */
-	@HystrixCommand(fallbackMethod = "getXigniteCompanyInfo",
+	@HystrixCommand(fallbackMethod = "getCompanyInfoFallback",
 		    commandProperties = {
 		      @HystrixProperty(name="execution.timeout.enabled", value="false")
 		    })
@@ -159,8 +125,12 @@ public class QuoteService {
 	public List<Quote> getQuotes(String symbols) {
 		logger.debug("retrieving multiple quotes for: "
 				+ symbols);
+		logger.debug("yahoo URL: "
+				+ yahoo_url);
+		logger.debug("env URL: "
+				+ ENV);
 		YahooQuoteResponse response = restTemplate.getForObject(yahoo_url,
-				YahooQuoteResponse.class, symbols, FMT, ENV);
+				YahooQuoteResponse.class, ENV, symbols, FMT);
 		logger.debug("Got response: " + response);
 		List<Quote> quotes = response
 				.getResults()
@@ -173,34 +143,13 @@ public class QuoteService {
 		return quotes;
 	}
 
-	/**
-	 * Fallback method to get Company Info
-	 * 
-	 * @author skazi
-	 * @param symbol
-	 * @return Company Info
-	 * @throws SymbolNotFoundException
-	 */
-	@HystrixCommand(fallbackMethod = "getCompanyInfoFallback")
-	public List<CompanyInfo> getXigniteCompanyInfo(String symbol)
-			throws SymbolNotFoundException {
-		logger.debug("QuoteService.getCompanyInfo2: retrieving info for: "
-				+ symbol);
-		XigniteDelayedQuote quote = callXigniteQuote(symbol);
-
-		List<CompanyInfo> myList = new ArrayList<CompanyInfo>();
-		myList.add(CompanyInfoMapper.INSTANCE.mapXigniteCompanyInfo(quote));
-		logger.debug("QuoteService.getCompanyInfo: retrieved info: "
-				+ myList.toString());
-
-		return myList;
-	}
 
 	@SuppressWarnings("unused")
-	private Quote getCompanyInfoFallback(String symbol)
+	private List<CompanyInfo> getCompanyInfoFallback(String symbol)
 			throws SymbolNotFoundException {
 		logger.debug("QuoteService.getCompanyInfoFallback: circuit opened for symbol: "
 				+ symbol);
-		throw new RuntimeException("Company Info service unavailable.");
+		List<CompanyInfo> companies = new ArrayList<>();
+		return companies;
 	}
 }

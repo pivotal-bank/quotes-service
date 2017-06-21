@@ -18,8 +18,8 @@ import io.pivotal.quotes.domain.Quote;
  */
 public class TestConfiguration {
 	
-	public static final String QUOTE_SYMBOL = "EMC";
-	public static final String QUOTE_NAME = "EMC Corp";
+	public static final String QUOTE_SYMBOL = "IBM";
+	public static final String QUOTE_NAME = "International Business Machines";
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss zzzXXX yyyy", Locale.ENGLISH);
 	public static final String QUOTE_DATE_STRING = "Wed May 6 00:00:00 UTC-04:00 2015";
 	public static final BigDecimal QUOTE_LAST_PRICE = new BigDecimal(26.135);
@@ -30,7 +30,7 @@ public class TestConfiguration {
 	public static final String COMPANY_EXCHANGE = "NASDAQ";
 	public static final String NULL_QUOTE_SYMBOL = "LALALALA";
 	
-	public static final String QUOTE_SYMBOLS = "EMC,IBM";
+	public static final String QUOTE_SYMBOLS = "GOOGL,IBM";
 	/*
 	 * {"Status":"SUCCESS","Name":"EMC Corp","Symbol":"EMC","LastPrice":26.135,
 	 * "Change":0.00500000000000256,"ChangePercent":0.0191350937619692,
@@ -40,7 +40,7 @@ public class TestConfiguration {
 	 */
 	public static Quote quote() {
 		Quote quote = new Quote();
-		quote.setName("EMC Corp");
+		quote.setName(QUOTE_NAME);
 		quote.setSymbol(QUOTE_SYMBOL);
 		quote.setLastPrice(QUOTE_LAST_PRICE);
 		quote.setChange(QUOTE_CHANGE);

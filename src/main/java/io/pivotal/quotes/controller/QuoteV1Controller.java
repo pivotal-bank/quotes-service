@@ -47,23 +47,6 @@ public class QuoteV1Controller {
 	private QuoteService service;
 
 	/**
-	 * Retrieves the current quote for the given symbol.
-	 * 
-	 * @param symbol
-	 *            The symbol to retrieve the quote for.
-	 * @return The Quote
-	 * @throws SymbolNotFoundException
-	 *             if the symbol is not valid.
-	 */
-	//TODO: should we leave this call here? we have the /quotes/
-	/*@RequestMapping(value = "/quote/{symbol}", method = RequestMethod.GET)
-	public ResponseEntity<Quote> getQuote(@PathVariable("symbol") final String symbol) throws SymbolNotFoundException {
-		logger.debug("QuoteController.getQuote: retrieving quote for: " + symbol);
-		Quote quote = service.getQuote(symbol);
-		logger.info(String.format("Retrieved symbol: %s with quote %s", symbol, quote));
-		return new ResponseEntity<Quote>(quote, getNoCacheHeaders(), HttpStatus.OK);
-	}*/
-	/**
 	 * Retrieves the current quotes for the given symbols.
 	 * 
 	 * @param query
@@ -74,7 +57,7 @@ public class QuoteV1Controller {
 	 */
 	@RequestMapping(value = "/quotes", method = RequestMethod.GET)
 	public ResponseEntity<List<Quote>> getQuotes(@RequestParam(value="q", required=false) String query) throws SymbolNotFoundException{
-		logger.debug("received Quote query for: %s", query);
+		logger.debug("received Quote query for: "+ query);
 		if (query == null) {
 			//return empty list.
 			return new ResponseEntity<List<Quote>>(new ArrayList<Quote>(), getNoCacheHeaders(), HttpStatus.OK);

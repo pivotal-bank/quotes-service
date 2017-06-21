@@ -31,6 +31,7 @@ public class Quote {
     "High":52499,
     "Low":519.175,
     "Open":519.175
+    "Currency":"USD"
 }
  */
 	@JsonProperty("Status")
@@ -65,6 +66,175 @@ public class Quote {
 	private BigDecimal low;
 	@JsonProperty("Open")
 	private BigDecimal open;
+	@JsonProperty("Currency")
+	private String currency = "USD";
+	
+	public BigDecimal getChange() {
+		return change;
+	}
+	public Float getChangePercent() {
+		return changePercent;
+	}
+	
+	public Float getChangePercentYTD() {
+		return changePercentYTD;
+	}
+	public Float getChangeYTD() {
+		return changeYTD;
+	}
+	
+	public BigDecimal getHigh() {
+		return high;
+	}
+	public BigDecimal getLastPrice() {
+		return lastPrice;
+	}
+	
+	public BigDecimal getLow() {
+		return low;
+	}
+	public Float getMarketCap() {
+		return marketCap;
+	}
+	
+	public Float getmSDate() {
+		return mSDate;
+	}
+	public String getName() {
+		return name;
+	}
+	
+	public BigDecimal getOpen() {
+		return open;
+	}
+	public String getStatus() {
+		return status;
+	}
+	
+	public String getSymbol() {
+		return symbol;
+	}
+	public Date getTimestamp() {
+		return timestamp;
+	}
+	
+	public Integer getVolume() {
+		return volume;
+	}
+	
+	public void setChange(BigDecimal bigDecimal) {
+		this.change = bigDecimal;
+	}
+	public void setChangePercent(Float changePercent) {
+		this.changePercent = changePercent;
+	}
+	
+	public void setChangePercentYTD(Float changePercentYTD) {
+		this.changePercentYTD = changePercentYTD;
+	}
+	public void setChangeYTD(Float changeYTD) {
+		this.changeYTD = changeYTD;
+	}
+	
+	public void setHigh(BigDecimal bigDecimal) {
+		this.high = bigDecimal;
+	}
+	public void setLastPrice(BigDecimal lastPrice) {
+		this.lastPrice = lastPrice;
+	}
+	
+	public void setLow(BigDecimal bigDecimal) {
+		this.low = bigDecimal;
+	}
+	public void setMarketCap(Float marketCap) {
+		this.marketCap = marketCap;
+	}
+	
+	public void setmSDate(Float mSDate) {
+		this.mSDate = mSDate;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setOpen(BigDecimal bigDecimal) {
+		this.open = bigDecimal;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	public void setVolume(Integer volume) {
+		this.volume = volume;
+	}
+	public String getCurrency() {
+		return currency;
+	}
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Quote [status=").append(status).append(", name=")
+				.append(name).append(", symbol=").append(symbol)
+				.append(", lastPrice=").append(lastPrice).append(", change=")
+				.append(change).append(", changePercent=")
+				.append(changePercent).append(", timestamp=").append(timestamp)
+				.append(", mSDate=").append(mSDate).append(", marketCap=")
+				.append(marketCap).append(", volume=").append(volume)
+				.append(", changeYTD=").append(changeYTD)
+				.append(", changePercentYTD=").append(changePercentYTD)
+				.append(", high=").append(high).append(", low=").append(low)
+				.append(", open=").append(open).append(", currency=")
+				.append(currency).append("]");
+		return builder.toString();
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((change == null) ? 0 : change.hashCode());
+		result = prime * result
+				+ ((changePercent == null) ? 0 : changePercent.hashCode());
+		result = prime
+				* result
+				+ ((changePercentYTD == null) ? 0 : changePercentYTD.hashCode());
+		result = prime * result
+				+ ((changeYTD == null) ? 0 : changeYTD.hashCode());
+		result = prime * result
+				+ ((currency == null) ? 0 : currency.hashCode());
+		result = prime * result + ((high == null) ? 0 : high.hashCode());
+		result = prime * result
+				+ ((lastPrice == null) ? 0 : lastPrice.hashCode());
+		result = prime * result + ((low == null) ? 0 : low.hashCode());
+		result = prime * result + ((mSDate == null) ? 0 : mSDate.hashCode());
+		result = prime * result
+				+ ((marketCap == null) ? 0 : marketCap.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((open == null) ? 0 : open.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
+		result = prime * result
+				+ ((timestamp == null) ? 0 : timestamp.hashCode());
+		result = prime * result + ((volume == null) ? 0 : volume.hashCode());
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -93,6 +263,11 @@ public class Quote {
 			if (other.changeYTD != null)
 				return false;
 		} else if (!changeYTD.equals(other.changeYTD))
+			return false;
+		if (currency == null) {
+			if (other.currency != null)
+				return false;
+		} else if (!currency.equals(other.currency))
 			return false;
 		if (high == null) {
 			if (other.high != null)
@@ -151,156 +326,6 @@ public class Quote {
 			return false;
 		return true;
 	}
-	public BigDecimal getChange() {
-		return change;
-	}
-	public Float getChangePercent() {
-		return changePercent;
-	}
-	
-	public Float getChangePercentYTD() {
-		return changePercentYTD;
-	}
-	public Float getChangeYTD() {
-		return changeYTD;
-	}
-	
-	public BigDecimal getHigh() {
-		return high;
-	}
-	public BigDecimal getLastPrice() {
-		return lastPrice;
-	}
-	
-	public BigDecimal getLow() {
-		return low;
-	}
-	public Float getMarketCap() {
-		return marketCap;
-	}
-	
-	public Float getmSDate() {
-		return mSDate;
-	}
-	public String getName() {
-		return name;
-	}
-	
-	public BigDecimal getOpen() {
-		return open;
-	}
-	public String getStatus() {
-		return status;
-	}
-	
-	public String getSymbol() {
-		return symbol;
-	}
-	public Date getTimestamp() {
-		return timestamp;
-	}
-	
-	public Integer getVolume() {
-		return volume;
-	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((change == null) ? 0 : change.hashCode());
-		result = prime * result
-				+ ((changePercent == null) ? 0 : changePercent.hashCode());
-		result = prime
-				* result
-				+ ((changePercentYTD == null) ? 0 : changePercentYTD.hashCode());
-		result = prime * result
-				+ ((changeYTD == null) ? 0 : changeYTD.hashCode());
-		result = prime * result + ((high == null) ? 0 : high.hashCode());
-		result = prime * result
-				+ ((lastPrice == null) ? 0 : lastPrice.hashCode());
-		result = prime * result + ((low == null) ? 0 : low.hashCode());
-		result = prime * result + ((mSDate == null) ? 0 : mSDate.hashCode());
-		result = prime * result
-				+ ((marketCap == null) ? 0 : marketCap.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((open == null) ? 0 : open.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
-		result = prime * result
-				+ ((timestamp == null) ? 0 : timestamp.hashCode());
-		result = prime * result + ((volume == null) ? 0 : volume.hashCode());
-		return result;
-	}
-	
-	public void setChange(BigDecimal bigDecimal) {
-		this.change = bigDecimal;
-	}
-	public void setChangePercent(Float changePercent) {
-		this.changePercent = changePercent;
-	}
-	
-	public void setChangePercentYTD(Float changePercentYTD) {
-		this.changePercentYTD = changePercentYTD;
-	}
-	public void setChangeYTD(Float changeYTD) {
-		this.changeYTD = changeYTD;
-	}
-	
-	public void setHigh(BigDecimal bigDecimal) {
-		this.high = bigDecimal;
-	}
-	public void setLastPrice(BigDecimal lastPrice) {
-		this.lastPrice = lastPrice;
-	}
-	
-	public void setLow(BigDecimal bigDecimal) {
-		this.low = bigDecimal;
-	}
-	public void setMarketCap(Float marketCap) {
-		this.marketCap = marketCap;
-	}
-	
-	public void setmSDate(Float mSDate) {
-		this.mSDate = mSDate;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public void setOpen(BigDecimal bigDecimal) {
-		this.open = bigDecimal;
-	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public void setSymbol(String symbol) {
-		this.symbol = symbol;
-	}
-
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
-	
-	public void setVolume(Integer volume) {
-		this.volume = volume;
-	}
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Quote [status=").append(status).append(", name=")
-				.append(name).append(", symbol=").append(symbol)
-				.append(", lastPrice=").append(lastPrice).append(", change=")
-				.append(change).append(", changePercent=")
-				.append(changePercent).append(", timestamp=").append(timestamp)
-				.append(", mSDate=").append(mSDate).append(", marketCap=")
-				.append(marketCap).append(", volume=").append(volume)
-				.append(", changeYTD=").append(changeYTD)
-				.append(", changePercentYTD=").append(changePercentYTD)
-				.append(", high=").append(high).append(", low=").append(low)
-				.append(", open=").append(open).append("]");
-		return builder.toString();
-	}
 	
 }

@@ -21,10 +21,10 @@ import org.springframework.context.annotation.Bean;
 @EnableCircuitBreaker
 public class QuotesApplication {
 	
-	@Bean
-	public Sampler<?> defaultSampler() {
+	/*@Bean
+	public Sampler defaultSampler() {
 		return new AlwaysSampler();
-	}
+	}*/
 	
 	public static void main(String[] args) {
 		SpringApplication.run(QuotesApplication.class, args);
