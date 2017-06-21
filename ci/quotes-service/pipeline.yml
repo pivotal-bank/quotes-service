@@ -57,8 +57,8 @@ jobs:
     trigger: true
   - task: build
     file: quotes-service/ci/tasks/build-quotes-service/task.yml
-    params:
-      ARTIFACT_ID: quotes
+#    params:
+#      ARTIFACT_ID: {{service-name}}
   - put: cf-zero-downtime-push
     resource: cf-env
     params:
