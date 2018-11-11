@@ -1,15 +1,14 @@
 package io.pivotal.quotes.configuration;
 
+import io.pivotal.quotes.domain.CompanyInfo;
+import io.pivotal.quotes.domain.Quote;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import io.pivotal.quotes.domain.CompanyInfo;
-import io.pivotal.quotes.domain.Quote;
 /**
  * Defaults to use for the tests.
  * 
@@ -19,7 +18,7 @@ import io.pivotal.quotes.domain.Quote;
 public class TestConfiguration {
 	
 	public static final String QUOTE_SYMBOL = "IBM";
-	public static final String QUOTE_NAME = "International Business Machines";
+	public static final String QUOTE_NAME = "International Business Machines Corporation";
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss zzzXXX yyyy", Locale.ENGLISH);
 	public static final String QUOTE_DATE_STRING = "Wed May 6 00:00:00 UTC-04:00 2015";
 	public static final BigDecimal QUOTE_LAST_PRICE = new BigDecimal(26.135);
