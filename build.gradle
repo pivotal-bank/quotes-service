@@ -97,6 +97,7 @@ dependencies {
     implementation("io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry")
     implementation("io.pivotal.spring.cloud:spring-cloud-services-starter-circuit-breaker")
     compileOnly('org.projectlombok:lombok:1.16.20')
+    runtimeOnly("org.springframework.boot:spring-boot-devtools")
     //test packages
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
