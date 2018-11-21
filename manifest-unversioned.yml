@@ -5,5 +5,10 @@ applications:
   instances: 1
   memory: 1G
   random-route: true
-  path: libs/quotes-${version}.jar
-  services: [ discovery-service, circuit-breaker-dashboard, config-server ]
+  path: libs/quotes-service-${version}.jar
+  services:
+    - service-registry
+    - circuit-breaker-dashboard
+    - config-server
+  env:
+    SPRING_PROFILES_ACTIVE: cloud
