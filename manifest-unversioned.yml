@@ -10,5 +10,6 @@ applications:
     - service-registry
     - circuit-breaker-dashboard
     - config-server
+    - newrelic
   env:
     SPRING_PROFILES_ACTIVE: cloud
