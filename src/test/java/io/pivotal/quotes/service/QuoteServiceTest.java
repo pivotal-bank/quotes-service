@@ -1,27 +1,26 @@
 package io.pivotal.quotes.service;
 
-import io.pivotal.quotes.QuotesApplication;
 import io.pivotal.quotes.configuration.TestConfiguration;
 import io.pivotal.quotes.domain.CompanyInfo;
+import io.pivotal.quotes.domain.IexBatchQuote;
+import io.pivotal.quotes.domain.IexQuote;
 import io.pivotal.quotes.domain.Quote;
+import io.pivotal.quotes.exception.SymbolNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
+import static org.mockito.BDDMockito.*;
+import static org.hamcrest.Matchers.*;
+
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -30,24 +29,32 @@ import static org.junit.Assert.*;
  *
  * @author David Ferreira Pinto
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = QuotesApplication.class)
+@RunWith(MockitoJUnitRunner.class)
 public class QuoteServiceTest {
-    MockMvc mockMvc;
+
+    private static final String QUOTES_URL = "quotesUrl";
+    private static final String QUOTE_URL = "quoteUrl";
+    private static final String COMPANY_URL = "companyUrl";
+
+    /**
+     * @Value("${pivotal.quotes.quote_url}") protected String quote_url;
+     * @Value("${pivotal.quotes.quotes_url}") protected String quotes_url;
+     * @Value("${pivotal.quotes.companies_url}") protected String company_url;
+     */
+
 
     @InjectMocks
-    @Autowired
-    QuoteService service;
+    private QuoteService service;
 
     @Mock
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
+
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-
-        this.mockMvc = MockMvcBuilders.standaloneSetup(service).build();
-
+        ReflectionTestUtils.setField(service, "quote_url", QUOTE_URL);
+        ReflectionTestUtils.setField(service, "quotes_url", QUOTES_URL);
+        ReflectionTestUtils.setField(service, "company_url", COMPANY_URL);
     }
 
     /**
@@ -57,23 +64,21 @@ public class QuoteServiceTest {
      */
     @Test
     public void getQuote() throws Exception {
+        ArgumentCaptor<Map<String,String>> argumentCaptor = ArgumentCaptor.forClass(Map.class);
+        given(restTemplate.getForObject(eq(QUOTE_URL), eq(IexQuote.class), argumentCaptor.capture())).willReturn(TestConfiguration.iexQuote());
         Quote quote = service.getQuote(TestConfiguration.QUOTE_SYMBOL);
         assertEquals(TestConfiguration.QUOTE_SYMBOL, quote.getSymbol());
         assertEquals(TestConfiguration.QUOTE_NAME, quote.getName());
+        assertEquals(TestConfiguration.QUOTE_SYMBOL, argumentCaptor.getValue().get("symbol"));
     }
 
-    /**
-     * Tests retrieving a quote with an unknown/null symbol from the external service.
-     *
-     * @throws Exception
-     */
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
-    @Test
+
+    @Test(expected = SymbolNotFoundException.class)
     public void getNullQuote() throws Exception {
+        ArgumentCaptor<Map<String,String>> argumentCaptor = ArgumentCaptor.forClass(Map.class);
+        given(restTemplate.getForObject(eq(QUOTE_URL), eq(IexQuote.class), argumentCaptor.capture())).willReturn(null);
         Quote quote = service.getQuote(TestConfiguration.NULL_QUOTE_SYMBOL);
-        assertEquals(quote.getStatus(), "FAILED");
     }
 
     /**
@@ -83,6 +88,9 @@ public class QuoteServiceTest {
      */
     @Test
     public void getCompanyInfo() throws Exception {
+        ArgumentCaptor<Map<String,String>> argumentCaptor = ArgumentCaptor.forClass(Map.class);
+        given(restTemplate.getForObject(eq(COMPANY_URL),
+                eq(CompanyInfo[].class), argumentCaptor.capture())).willReturn(new CompanyInfo[] {TestConfiguration.company()});
         List<CompanyInfo> comps = service.getCompanyInfo(TestConfiguration.QUOTE_SYMBOL);
         assertFalse(comps.isEmpty());
         boolean pass = false;
@@ -91,6 +99,7 @@ public class QuoteServiceTest {
                 pass = true;
             }
         }
+        assertEquals(TestConfiguration.QUOTE_SYMBOL, argumentCaptor.getValue().get("name"));
         assertTrue(pass);
     }
 
@@ -101,7 +110,11 @@ public class QuoteServiceTest {
      */
     @Test
     public void getNullCompanyInfo() throws Exception {
+        ArgumentCaptor<Map<String,String>> argumentCaptor = ArgumentCaptor.forClass(Map.class);
+        given(restTemplate.getForObject(eq(COMPANY_URL),
+                eq(CompanyInfo[].class), argumentCaptor.capture())).willReturn(new CompanyInfo[] {});
         List<CompanyInfo> comps = service.getCompanyInfo(TestConfiguration.NULL_QUOTE_SYMBOL);
+        assertEquals(TestConfiguration.NULL_QUOTE_SYMBOL, argumentCaptor.getValue().get("name"));
         assertTrue(comps.isEmpty());
     }
 
@@ -112,6 +125,7 @@ public class QuoteServiceTest {
      */
     @Test
     public void getQuotes() throws Exception {
+        given(restTemplate.getForObject(QUOTES_URL, IexBatchQuote.class, TestConfiguration.QUOTE_SYMBOLS)).willReturn(TestConfiguration.iexBatchQuoteFor2Symbols());
         List<Quote> quotes = service.getQuotes(TestConfiguration.QUOTE_SYMBOLS);
         assertNotNull("should have 2 quotes", quotes);
         assertEquals("should have 2 quotes", quotes.size(), 2);
@@ -119,6 +133,7 @@ public class QuoteServiceTest {
 
     @Test
     public void getQuotesOneQuote() throws Exception {
+        given(restTemplate.getForObject(QUOTES_URL, IexBatchQuote.class, TestConfiguration.QUOTE_SYMBOL)).willReturn(TestConfiguration.iexBatchQuoteFor1Symbol());
         List<Quote> quotes = service.getQuotes(TestConfiguration.QUOTE_SYMBOL);
         assertNotNull("should have 1 quotes", quotes);
         assertEquals("should have 1 quotes", quotes.size(), 1);

@@ -7,10 +7,16 @@ import io.pivotal.quotes.service.QuoteService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -30,82 +36,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author David Ferreira Pinto
  */
+@RunWith(SpringRunner.class)
+@WebMvcTest(controllers = QuoteV1Controller.class, secure = false)
 public class QuoteV1ControllerTest {
-    MockMvc mockMvc;
 
-    @InjectMocks
-    QuoteV1Controller controller;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Mock
-    QuoteService service;
+    @MockBean
+    private QuoteService service;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-
-        this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-    }
-
-	/*
-	 * Tests the <code>/quote</code> REST endpoint.
-	 * test fetching a quote succesfully.
-	 */
-	/*
-	  @Test
-	 
-	public void getQuote() throws Exception {
-		when(service.getQuote(TestConfiguration.QUOTE_SYMBOL)).thenReturn(
-				TestConfiguration.quote());
-
-		mockMvc.perform(
-				get("/v1/quote/" + TestConfiguration.QUOTE_SYMBOL).contentType(
-						MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-						.andDo(print())
-				.andExpect(
-						content().contentTypeCompatibleWith(
-								MediaType.APPLICATION_JSON))
-				.andExpect(
-						jsonPath("$.Name").value(
-								TestConfiguration.QUOTE_NAME))
-				.andExpect(
-						jsonPath("$.Symbol").value(
-								TestConfiguration.QUOTE_SYMBOL))
-				.andExpect(
-						jsonPath("$.LastPrice").value(
-								TestConfiguration.QUOTE_LAST_PRICE))
-				.andExpect(
-						jsonPath("$.Change",Matchers.closeTo(TestConfiguration.QUOTE_CHANGE, new BigDecimal(0.01))))
-				.andExpect(
-						jsonPath("$.ChangePercent", Matchers.closeTo(TestConfiguration.QUOTE_CHANGE_PERCENT, 0.01)))
-				.andExpect(
-						jsonPath("$.Timestamp",notNullValue()))
-				.andExpect(
-						jsonPath("$.MSDate",Matchers.closeTo(
-								TestConfiguration.QUOTE_MSDATE,0.01)));
-	}
-	*/
 
     /*
-     * Tests the <code>/quote</code> REST endpoint.
-     * test fetching a quote that has a null symbol and throws exception.
+     * Tests the <code>/company</code> REST endpoint.
+     * test fetching a company information.
      */
-	/*
-	@Test
-	public void getNullQuote() throws Exception {
-		when(service.getQuote(TestConfiguration.NULL_QUOTE_SYMBOL)).thenThrow(
-				new SymbolNotFoundException(TestConfiguration.NULL_QUOTE_SYMBOL));
-
-		mockMvc.perform(
-				get("/v1/quote/" + TestConfiguration.NULL_QUOTE_SYMBOL).contentType(
-						MediaType.APPLICATION_JSON)).andExpect(status().is5xxServerError())
-						.andDo(print());
-
-	}
-	*/
-	/*
-	 * Tests the <code>/company</code> REST endpoint.
-	 * test fetching a company information.
-	 */
     @Test
     public void getCompanies() throws Exception {
         List<CompanyInfo> comps = new ArrayList<>();

@@ -59,7 +59,7 @@ public class QuoteService {
 
 		IexQuote quote = restTemplate.getForObject(quote_url, IexQuote.class, params);
 
-		if (quote.getSymbol() == null) {
+		if (quote == null || quote.getSymbol() == null) {
 			throw new SymbolNotFoundException("Symbol not found: " + symbol);
 		}
 

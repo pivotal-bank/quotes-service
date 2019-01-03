@@ -1,12 +1,15 @@
 package io.pivotal.quotes.configuration;
 
 import io.pivotal.quotes.domain.CompanyInfo;
+import io.pivotal.quotes.domain.IexBatchQuote;
+import io.pivotal.quotes.domain.IexQuote;
 import io.pivotal.quotes.domain.Quote;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 /**
@@ -59,8 +62,25 @@ public class TestConfiguration {
 		quote.setLow(new BigDecimal(0.0));
 		quote.setOpen(new BigDecimal(26.52));
 		return quote;
-		
 	}
+
+
+	public static IexQuote iexQuote() throws Exception{
+		IexQuote iexQuote = new IexQuote();
+		iexQuote.setCompanyName(QUOTE_NAME);
+		iexQuote.setSymbol(QUOTE_SYMBOL);
+		iexQuote.setOpen(new BigDecimal(26.52));
+		iexQuote.setHigh(new BigDecimal(0.0));
+		iexQuote.setLow(new BigDecimal(0.0));
+		iexQuote.setChange(new BigDecimal(29.74));
+		iexQuote.setChangePercent(new BigDecimal(-12.1217215870881));
+		iexQuote.setMarketCap(new BigDecimal(50755764235.00));
+		iexQuote.setLatestSource("Previous close");
+		iexQuote.setCloseTime(dateFormat.parse(QUOTE_DATE_STRING).getTime());
+		iexQuote.setAvgTotalVolume(new BigDecimal(15159291));
+		return iexQuote;
+	}
+
 	public static Quote quote2() {
 		Quote quote = new Quote();
 		quote.setName("International Business Machine");
@@ -83,8 +103,45 @@ public class TestConfiguration {
 		quote.setLow(new BigDecimal(0.0));
 		quote.setOpen(new BigDecimal(26.52));
 		return quote;
-		
 	}
+
+	public static IexQuote iexQuote2() throws Exception{
+		IexQuote iexQuote = new IexQuote();
+		iexQuote.setCompanyName("International Business Machine");
+		iexQuote.setSymbol("IBM");
+		iexQuote.setOpen(new BigDecimal(26.52));
+		iexQuote.setHigh(new BigDecimal(0.0));
+		iexQuote.setLow(new BigDecimal(0.0));
+		iexQuote.setChange(new BigDecimal(29.74));
+		iexQuote.setChangePercent(new BigDecimal(-12.1217215870881));
+		iexQuote.setMarketCap(new BigDecimal(50755764235.00));
+		iexQuote.setLatestSource("Previous close");
+		iexQuote.setCloseTime(dateFormat.parse(QUOTE_DATE_STRING).getTime());
+		iexQuote.setAvgTotalVolume(new BigDecimal(15159291));
+		return iexQuote;
+	}
+
+
+	public static IexBatchQuote iexBatchQuoteFor2Symbols() throws Exception {
+		IexBatchQuote batchQuote = new IexBatchQuote();
+		batchQuote.put(QUOTE_NAME, hashMapFor(QUOTE_NAME, iexQuote()));
+		batchQuote.put("IBM", hashMapFor("IBM", iexQuote2()));
+		return batchQuote;
+	}
+
+	public static IexBatchQuote iexBatchQuoteFor1Symbol() throws Exception {
+		IexBatchQuote batchQuote = new IexBatchQuote();
+		batchQuote.put(QUOTE_NAME, hashMapFor(QUOTE_NAME, iexQuote()));
+		return batchQuote;
+	}
+
+	private static HashMap<String, IexQuote> hashMapFor(String key, IexQuote value) {
+		HashMap<String, IexQuote> map = new HashMap<>();
+		map.put(key, value);
+		return map;
+	}
+
+
 	public static List<Quote> quotes() {
 		List<Quote> quotes = new ArrayList<>();
 		quotes.add(quote());

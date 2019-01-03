@@ -6,6 +6,8 @@ applications:
   memory: 1G
   random-route: true
   path: libs/quotes-service-${version}.jar
+  buildpacks:
+   - https://github.com/cloudfoundry/java-buildpack.git#v4.16.1
   services:
     - service-registry
     - circuit-breaker-dashboard
