@@ -18,6 +18,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'net.ltgt.apt' version '0.15'
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -52,14 +56,8 @@ jacocoTestReport {
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
     reports {
-
         csv.enabled false
-
-        html {
-            enabled true
-            destination "${buildDir}/reports/jacoco"
-        }
-
+        html.destination file("${buildDir}/jacocoHtml")
         xml.enabled false
     }
 
@@ -91,17 +89,19 @@ dependencies {
 
     // shared dependencies for all services
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.cloud:spring-cloud-starter-sleuth")
     implementation("io.pivotal.spring.cloud:spring-cloud-services-starter-config-client")
     implementation("io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry")
     implementation("io.pivotal.spring.cloud:spring-cloud-services-starter-circuit-breaker")
-    compileOnly('org.projectlombok:lombok:1.16.20')
+    compileOnly("org.projectlombok:lombok:1.16.20")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     //test packages
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.jayway.jsonpath:json-path")
+    annotationProcessor("org.projectlombok:lombok:1.16.20")
 }
 // process substitutions in yml files.
 processResources {
@@ -112,4 +112,4 @@ processResources {
 jar { baseName = 'quotes' }
 description = "Micro-service to retrieve up to date quotes"
 
-task wrapper(type: Wrapper) { gradleVersion = '4.6' }
+task wrapper(type: Wrapper) { gradleVersion = '5.1' }
