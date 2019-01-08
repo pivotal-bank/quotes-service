@@ -16,7 +16,3 @@ cf-db-service-name: traderdb
 cf-quotes-service-name: quotes-service
 cf-quotes-service-host: quotes-service
 cf-quotes-service-services: traderdb, discovery-service, circuit-breaker-dashboard, config-server
-git-private-key: |
-  -----BEGIN RSA PRIVATE KEY-----
-  ...
-  -----END RSA PRIVATE KEY-----
